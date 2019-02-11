@@ -43,6 +43,23 @@ class Captcha:
     text_offset = 10
     _generate_captchas = {}
     _num_generated = 0
+    folder = "static/"
+
+    def __init__(self):
+        '''
+            Call init_clean() to remove remaining captcha image files.
+        '''
+        Captcha.init_clean()
+
+    @staticmethod
+    def init_clean():
+        '''
+            Finds captcha image files and deletes them.
+            Image file_names are "captcha_<number>.png"
+        '''
+        for file in os.listdir():
+            if file.startswith("captcha_") and file.endswith(".png"):
+                os.remove(file)
 
     @staticmethod
     def clean():
@@ -63,7 +80,7 @@ class Captcha:
             if code not in Captcha._generate_captchas:
                 break
         answer = ''.join(choices(string.ascii_uppercase + string.digits, k = length))
-        file_name = "captcha_" + str(Captcha._num_generated) + ".png"
+        file_name = Captcha.folder + "captcha_" + str(Captcha._num_generated) + ".png"
         Captcha._num_generated += 1
 
         # Create image. Draw answer onto image. Save image.
@@ -75,7 +92,7 @@ class Captcha:
         image.save(file_name)
 
         # Store data in _captcha object
-        Captcha._generate_captchas[code] = _captcha(code, answer, file_name)
+        Captcha._generate_captchas[code] = _captcha(code, answer,  file_name)
         print(Captcha._generate_captchas)
 
         return (code, file_name)
@@ -88,16 +105,19 @@ class Captcha:
             raise Exception("There is not captcha matching code: " + str(code))
         correct = Captcha._generate_captchas[code].matches(answer)
 
-        if not correct:
-            del Captcha._generate_captchas[code]
+        # Delete captcha object and image file.
+        Captcha._generate_captchas[code].clean()
+        del Captcha._generate_captchas[code]
 
         return correct
 
     
 
 def clean_up():
+    '''
+        When interpreter exits, call Captcha.clean() to delete remaining captcha image files.
+        Note, this is not guaranteed to get called! 
+    '''
     Captcha.clean()
 
 atexit.register(clean_up)
-
-

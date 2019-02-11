@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <img src = "{{ captcha_file }}">
+
+    <form method="POST">
+        <input name = "text">
+        <input type = "submit">
+        <input name = "code" value = "{{ captcha_code }}" type = hidden>
+    </form>
+</body>
+
+</html>

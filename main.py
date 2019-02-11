@@ -11,6 +11,9 @@ from importlib import import_module
 from flask import Flask # default http://127.0.0.1:5000/
 from flask import render_template
 
+from flask import redirect
+from flask import url_for
+
 
 def register_pages(main_app, directory = "src/", ending = ".py"):
     '''
@@ -18,7 +21,6 @@ def register_pages(main_app, directory = "src/", ending = ".py"):
         If module has object named app, add this to main_app.
         app must be a Flask Blueprint object.
     '''
-
     sys.path.insert(0, directory)
     files = listdir(directory)
     files = [file[:-len(ending)] for file in files]
