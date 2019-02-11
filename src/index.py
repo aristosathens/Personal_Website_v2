@@ -1,18 +1,26 @@
 # Aristos Athens
 
 '''
-Home page
+    Home page
 '''
 
-from flask import Flask # default http://127.0.0.1:5000/
+import atexit
+
+import captcha_generator
+
+from flask import Blueprint
 from flask import render_template
 
-app = Flask(__name__, root_path = "./../")
+app = Blueprint("index", __name__)
+captcha = captcha_generator.Captcha()
 
 @app.route("/")
 def index():
+    html_file = __name__ + ".html"
     name = "Aristos"
-    return render_template("index.html", name = name)
+    code, file_name = captcha.generate_captcha()
+    print(code)
+    print(file_name)
+    print(captcha._generate_captchas)
+    return render_template(html_file, name = name)
 
-if __name__ == "__main__":
-    app.run(debug = True)
