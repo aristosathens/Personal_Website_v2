@@ -2,6 +2,7 @@
 
 '''
     Entry point for Flask application.
+    All routing will be in .py files located in /src.
 '''
 
 import sys
@@ -11,8 +12,6 @@ from importlib import import_module
 from flask import Flask # default http://127.0.0.1:5000/
 from flask import render_template
 
-from flask import redirect
-from flask import url_for
 
 
 def register_pages(main_app, directory = "src/", ending = ".py"):
@@ -37,6 +36,4 @@ def register_pages(main_app, directory = "src/", ending = ".py"):
 if __name__ == "__main__":
     app = Flask(__name__)
     register_pages(app, ending = ".py", directory = "src/")
-    app.run(debug = True)
-else:
-    raise Exception("Error: Why are you importing main.py?")
+    app.run(debug = False)

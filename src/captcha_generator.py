@@ -94,6 +94,7 @@ class Captcha:
         # Store data in _captcha object
         Captcha._generate_captchas[code] = _captcha(code, answer,  file_name)
         print(Captcha._generate_captchas)
+        print(answer)
 
         return (code, file_name)
 

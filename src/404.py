@@ -12,5 +12,5 @@ app = Blueprint("404", __name__)
 
 @app.app_errorhandler(404)
 def redirect_404(e):
-    print("HERE")
+    print("404 REDIRECT")
     return redirect(url_for("index.index"))

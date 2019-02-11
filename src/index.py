@@ -13,5 +13,5 @@ app = Blueprint("index", __name__)
 def index():
     html_file = __name__ + ".html"
     name = "Aristos"
-    return render_template(html_file, name = name)
+    return render_template(html_file, name = name, banner_image = "banner_example.jpg")
 
