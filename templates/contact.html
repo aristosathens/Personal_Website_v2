@@ -5,7 +5,10 @@
     <img src = "{{ captcha_file }}">
 
     <form method="POST">
-        <input name = "text">
+        <label>Email: </label><input name = "from" type = "text">
+        <label>Subject: </label><input name = "subject" type = "text">
+        <label>Message: </label><input name = "message" type = "text">
+        <label>Captcha: </label><input name = "answer" type = "text">
         <input type = "submit">
         <input name = "code" value = "{{ captcha_code }}" type = hidden>
     </form>

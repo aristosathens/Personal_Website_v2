@@ -36,4 +36,4 @@ def register_pages(main_app, directory = "src/", ending = ".py"):
 if __name__ == "__main__":
     app = Flask(__name__)
     register_pages(app, ending = ".py", directory = "src/")
-    app.run(debug = False)
+    app.run(debug = True)

@@ -17,6 +17,9 @@ class _captcha:
     '''
 
     def __init__(self, code, answer, file_name):
+        '''
+            Init _captcha object.
+        '''
         self._code = code
         self._answer = answer
         self._file_name = file_name
@@ -38,25 +41,21 @@ class _captcha:
 class Captcha:
     '''
         Generate and store _captchas.
+        Static class.
     '''
-    code_length = 20
-    text_offset = 10
+    _code_length = 20
+    _text_offset = 10
     _generate_captchas = {}
     _num_generated = 0
-    folder = "static/"
-
-    def __init__(self):
-        '''
-            Call init_clean() to remove remaining captcha image files.
-        '''
-        Captcha.init_clean()
+    _folder = "static/"
 
     @staticmethod
     def init_clean():
         '''
             Finds captcha image files and deletes them.
-            Image file_names are "captcha_<number>.png"
+            Image file_names are "captcha_<number>.png".
         '''
+        print("IN INIT CLEAN.")
         for file in os.listdir():
             if file.startswith("captcha_") and file.endswith(".png"):
                 os.remove(file)
@@ -69,25 +68,26 @@ class Captcha:
         for _, c in Captcha._generate_captchas.items():
             c.clean()
 
-    def generate_captcha(self, size = (300, 200), length = 5):
+    @staticmethod
+    def generate_captcha(size = (300, 200), length = 5):
         '''
             Generate a new captcha.
             Return (code, file_name).
         '''
         # Generate captcha info
         while True:
-            code = ''.join(choices(string.ascii_uppercase + string.digits, k = Captcha.code_length))
+            code = ''.join(choices(string.ascii_uppercase + string.digits, k = Captcha._code_length))
             if code not in Captcha._generate_captchas:
                 break
         answer = ''.join(choices(string.ascii_uppercase + string.digits, k = length))
-        file_name = Captcha.folder + "captcha_" + str(Captcha._num_generated) + ".png"
+        file_name = Captcha._folder + "captcha_" + str(Captcha._num_generated) + ".png"
         Captcha._num_generated += 1
 
         # Create image. Draw answer onto image. Save image.
         image = Image.new('RGB', size, color = 'red')
         d = ImageDraw.Draw(image)
-        text_location = (choice(range(Captcha.text_offset, size[0] - Captcha.text_offset)), \
-                         choice(range(Captcha.text_offset, size[1] - Captcha.text_offset)))
+        text_location = (choice(range(Captcha._text_offset, size[0] - Captcha._text_offset)), \
+                         choice(range(Captcha._text_offset, size[1] - Captcha._text_offset)))
         d.text(text_location, answer, fill=(255,255,0))
         image.save(file_name)
 
@@ -98,7 +98,8 @@ class Captcha:
 
         return (code, file_name)
 
-    def check_answer(self, code, answer):
+    @staticmethod
+    def check_answer(code, answer):
         '''
             Check if answer matches. If it does not, it deletes the captcha.
         '''
@@ -112,13 +113,22 @@ class Captcha:
 
         return correct
 
-    
 
-def clean_up():
+def _clean_up():
     '''
-        When interpreter exits, call Captcha.clean() to delete remaining captcha image files.
-        Note, this is not guaranteed to get called! 
+        When interpreter exits, call Captcha.clean() to delete leftover captcha image files, if any.
+        Note, this is not 100% guaranteed to get called! 
     '''
     Captcha.clean()
+    
 
-atexit.register(clean_up)
+'''
+    Code to run when module is loaded.
+'''
+Captcha.init_clean()
+
+
+'''
+    Code to run when process exits.
+'''
+atexit.register(_clean_up)
